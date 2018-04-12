@@ -259,7 +259,7 @@ let uses_same_parameter_names params function_name function_definitions =
 			| [] -> false 
 			| x::xs -> (match x with 
 				| TmVar(fi, isconst2, name) -> if Ustring.equal name value then true else (is_in xs value)
-				| _ -> print_endline "Something else!!!"; false)
+				| _ -> false)
 		in
 	let function_params = get_params_in_list function_definitions function_name in
 	boolean_reduce_and (fun x -> is_in params x) function_params
