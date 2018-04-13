@@ -67,3 +67,4 @@ function g(x,y,z){
   return x
 }
 const x = 4
+var s = "Hej"
