@@ -1,0 +1,1 @@
+Jag ändrade rad 7, 9 och 16 så att "true" blev "True" och "false" blev "False".

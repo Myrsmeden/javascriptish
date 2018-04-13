@@ -1,0 +1,2 @@
+Jag tog bort "swapped = true" från rad 16. Feltyp 5. Jag lade även till
+"console.log(swapped)" på rad 30. Feltyp 1. 

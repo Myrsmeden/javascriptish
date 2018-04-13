@@ -1,0 +1,1 @@
+Jag ändrade rad 21 från "number = number + 1" till "number + 1".

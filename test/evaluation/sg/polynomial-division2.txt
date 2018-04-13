@@ -1,0 +1,3 @@
+Jag ändrade rad 40 från "function polyShiftRight(p, places) {" till
+"function polyShiftRight(p places) {" och rad 137 från "polySubtract(n2, d2)"
+till "polySubtract(n2)". Feltyp 2.
