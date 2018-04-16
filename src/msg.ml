@@ -25,6 +25,7 @@ type id =
   | WRONG_NUMBER_OF_PARAMS
   | UNCAUGHT_RETURN
   | FUNCTION_NOT_CALLED
+  | FUNCTION_NOT_FOUND
   | BOOLEAN_INSTEAD_OF_BREAK
   | SAME_PARAMETER_NAMES
   | ERROR of string
@@ -57,6 +58,7 @@ let id2str id args =
     | WRONG_NUMBER_OF_PARAMS -> us"You seem to have passed the wrong number of arguments to the function " ^. (List.nth args 0) ^. us". I expected " ^. (List.nth args 1) ^. us", but got " ^. (List.nth args 2)
     | UNCAUGHT_RETURN -> us"The function " ^. (List.nth args 0) ^. us" returns a value, but that value is never used. Perhaps you want to assign that value to a variable?"
     | FUNCTION_NOT_CALLED -> us"You have declared a function called " ^. (List.nth args 0) ^. us", but you never call it. Remember to call your functions. If you do not use your function, consider removing it from your code to make it more readable."
+    | FUNCTION_NOT_FOUND -> us"I could not find the function " ^. (List.nth args 0) ^. us", did you mean " ^. (List.nth args 1) ^. us"?"
     | BOOLEAN_INSTEAD_OF_BREAK -> us"You are using a boolean variable instead of a break statement. Consider changing this in order to make your code more readable and efficient."
     | SAME_PARAMETER_NAMES -> us"Please note that you do not have to name the variables that you pass into a function in the same way as the parameters that function takes, as in function " ^. (List.nth args 0)
     | ERROR msg -> us msg

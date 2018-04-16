@@ -23,6 +23,8 @@ let print_env_info item =
 		| ErrorMsg(msg) -> uprint_endline (message2str(msg))
 		| FunctionInfo (_,name,_,_,_,_) -> uprint_string(us"Function: " ^. name); print_string "\n"
 
+let available_functions = [FunctionInfo(NoInfo, us"print",0,false,false,[])]
+
 (* Function to append two lists *)
 let append l1 l2 =
   let rec loop acc l1 l2 =
@@ -205,8 +207,8 @@ let rec levenshtein_distance s len_s t len_t =
 		)
 	) 
 
-(* Function to find possible variable names if the provided name is misspelled *)
-let find_possible_variables name env = 
+(* Function to find possible names if the provided name is misspelled *)
+let find_possible_name name env lst_name = 
 	let rec loop lst distance suggestion = 
 		match lst with 
 			| [] -> suggestion
@@ -217,9 +219,15 @@ let find_possible_variables name env =
 								(loop xs dist x)
 							else 
 								(loop xs distance suggestion))
-					| FunctionInfo(_,_,_,_,_,_) -> us""
+					| FunctionInfo(_,x,_,_,_,_) -> (let dist = levenshtein_distance name (Ustring.length name) x (Ustring.length x) in 
+							if dist < distance then 
+								(loop xs dist x)
+							else 
+								(loop xs distance suggestion))
 					| ErrorMsg(_) -> us"")
-	in loop (StringMap.find "env" env) 10 (us"")
+	in if String.equal lst_name "functions" then 
+		loop (append (StringMap.find "function_definitions" env) available_functions) 10 (us"")
+	else loop (StringMap.find lst_name env) 10 (us"")
 
 
 (* Function to check if the term ends with a return statement or not *)
@@ -276,22 +284,28 @@ let rec handle_tm_call f env tm tmlist in_assignment =
  				(match tm2 with 
  					| TmCall(fi3, tm3, tmlist3) -> handle_tm_call f acc tm3 tmlist3 true
  					| _ -> f tm2 acc)) tmlist (
- 			let env = check_function_for_return env tm in_assignment in
- 			if exists_in_environment name env "function_definitions" then (* Since this is a function call, we want to check if it is a defined function (in comparison to for instance print) *)
- 				(* Mark function as called *)
- 				let env = mark_as_called env name in
- 				(* Calculate number of parameters and arguments *)
- 				let expected_num_params = get_num_params_in_list (StringMap.find "function_definitions" env) name in
- 				let provided_num_args = List.length tmlist in
- 				if provided_num_args <> expected_num_params then
- 					let error = ErrorMsg(WRONG_NUMBER_OF_PARAMS, ERROR, fi2, [name; (ustring_of_int expected_num_params); (ustring_of_int provided_num_args)]) in add_env_var env "errors" error 
- 				else (
- 					(* Number of parameters were correct, see if all variables passed as arguments are called the same things as the parameters *)
- 					if uses_same_parameter_names tmlist name (StringMap.find "function_definitions" env) then 
- 						let error = ErrorMsg(SAME_PARAMETER_NAMES, NOTE, fi2,[name]) in add_env_var env "errors" error 
- 					else env)
- 			else 
- 				env))
+ 				(* Check if this function is misspelled *)
+ 				if not (exists name (append (StringMap.find "function_definitions" env) available_functions)) then 
+ 					(let suggestion = find_possible_name name env "functions" in 
+		 			let error = ErrorMsg(FUNCTION_NOT_FOUND, ERROR, fi2, [name;suggestion]) in 
+		 			add_env_var env "errors" error)
+		 		else (
+		 			let env = check_function_for_return env tm in_assignment in
+		 			if exists_in_environment name env "function_definitions" then (* Since this is a function call, we want to check if it is a defined function (in comparison to for instance print) *)
+		 				(* Mark function as called *)
+		 				let env = mark_as_called env name in
+		 				(* Calculate number of parameters and arguments *)
+		 				let expected_num_params = get_num_params_in_list (StringMap.find "function_definitions" env) name in
+		 				let provided_num_args = List.length tmlist in
+		 				if provided_num_args <> expected_num_params then
+		 					let error = ErrorMsg(WRONG_NUMBER_OF_PARAMS, ERROR, fi2, [name; (ustring_of_int expected_num_params); (ustring_of_int provided_num_args)]) in add_env_var env "errors" error 
+		 				else (
+		 					(* Number of parameters were correct, see if all variables passed as arguments are called the same things as the parameters *)
+		 					if uses_same_parameter_names tmlist name (StringMap.find "function_definitions" env) then 
+		 						let error = ErrorMsg(SAME_PARAMETER_NAMES, NOTE, fi2,[name]) in add_env_var env "errors" error 
+		 					else env)
+		 			else 
+		 				env)))
  		| TmConst(fi, const) -> (* We are using a const function, which means that we are handling return value *)
  			loop (fun tm2 acc -> 
  				(match tm2 with 
@@ -333,7 +347,7 @@ let analyze_scope ast errors =
 		 		| TmCall(fi2, tm2, tmlist) -> handle_tm_call traverse env tm2 tmlist true (* Handling return value *)
 		 		| _ -> traverse tm env)
 		 	else 
-		 		(let suggestion = find_possible_variables name env in 
+		 		(let suggestion = find_possible_name name env "env" in 
 		 		let error = ErrorMsg(VAR_NOT_IN_SCOPE, ERROR, fi, [name;suggestion]) in 
 		 		let env = add_env_var env "errors" error in
 				match tm with 
@@ -347,7 +361,7 @@ let analyze_scope ast errors =
 		 	if exists_in_environment name env "env" then
 		 		env
 		 	else 
-		 		(let suggestion = find_possible_variables name env in 
+		 		(let suggestion = find_possible_name name env "env" in 
 		 		let error = ErrorMsg(VAR_NOT_IN_SCOPE, ERROR, fi, [name;suggestion]) in 
 		 		add_env_var env "errors" error)
 		 | TmConst(fi,const) -> env
