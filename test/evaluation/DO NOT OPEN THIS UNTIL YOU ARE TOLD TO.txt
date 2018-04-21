@@ -1,0 +1,20 @@
+The identified common misconceptions among novice programmers are:
+
+1 Variables in different scopes
+2 Usage of function parameters
+3 Calling functions
+4 Catching return values
+5 If usage inside loops
+6 Breaking out of loops
+
+(number for identification, not priority)
+
+1. An example of this is declaring a variable inside the body of a function, and then expect it to be available outside of the function.
+
+2. Students have troubles with naming the parameters and providing the correct number of parameters to their declared functions
+
+3. Students tend to forget to call their declared functions
+
+4. If a function returns a value, the students do not always assign that value to a variable like "nonVoidFunction()" instead of "var x = nonVoidFunction()"
+
+5,6. Students use boolean variables and if statements to handle loops and do not use break or return to terminate when the loop could be done.

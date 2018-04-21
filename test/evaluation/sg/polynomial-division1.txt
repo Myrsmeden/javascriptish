@@ -1,0 +1,1 @@
+Jag ändrade rad 12 från "function copy(arr) {" till "function cop(arr) {".

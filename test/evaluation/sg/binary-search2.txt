@@ -1,0 +1,1 @@
+Jag lade till "console.log(startIndex)" på rad 27. Feltyp 1. 

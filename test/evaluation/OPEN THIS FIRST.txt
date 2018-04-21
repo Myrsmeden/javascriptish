@@ -1,0 +1,16 @@
+Thank you so much for helping me!
+
+If you have any questions, call me at 0762297312, email me at johan@myrsmeden.se or use whatever method you would like to use (where you know you can contact me)
+
+The evaluation consists of two independent tasks and you can choose to do either one of them or both.
+
+The first task is to look at one or more of the provided code examples and modify the code, with respect to mistakes you think that a novice programmer might do.
+
+The second task is to open the file DO NOT OPEN THIS UNTIL YOU ARE TOLD TO.txt, where different common misconceptions and problems among novice programmers are listed (these are results from interviews with teachers in introductory programming). Then try to modify the programs to have one or more of these errors.
+
+When you alter the code, please keep the main part of the file name, for instance, bubble-sort, and rename it to bubble-sort1.js. Then make a .txt-file with the name 1.txt, where you explain what you have done to the code. You could also insert those notes as comments if you would rather do that.
+
+If you choose to do the first task, do that now and do not open the other text file until you are done.
+
+If you are done with the first task, and/or you choose to do the second task - you may now open the file DO NOT OPEN THIS UNTIL YOU ARE TOLD TO.txt 
+

@@ -1,0 +1,1 @@
+Jag tog bort rad 10 som innehöll "var startIndex  = 0".

@@ -1,0 +1,2 @@
+Jag tog bort "find_primes(1000)" på rad 26. "Nybörjaren" i detta fall tror att
+det räcker med att definiera funktionen för att den ska köras.

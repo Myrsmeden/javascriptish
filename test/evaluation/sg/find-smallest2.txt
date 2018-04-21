@@ -1,0 +1,1 @@
+Jag tog bort "console.log(find_smallest_number(20))" på rad 25. Feltyp 3.
